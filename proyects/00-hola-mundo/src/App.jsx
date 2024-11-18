@@ -10,7 +10,7 @@ function App(){
 return(
     <section className="App">
     {/* con nombre */}
-    <TwitterFollowCard username={"elonmusk"}  name={"elon musk best"} />
+    <TwitterFollowCard username={"elonmusk"}  name={"elon musk best"} initialIsFollowing={true} />
 
     {/* sin nombres con la propiedad children */}
     <TwitterFollowCard  username={"billgates"}>
