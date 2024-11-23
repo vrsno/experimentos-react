@@ -1,5 +1,5 @@
 // @ts-check
-import { test, expect } from '@playwright/test'
+import { test, expect } from '@playwright/test';
 
 const LOCALHOST_URL = "http://localhost:5173/"
 const CART_PREFIX_IMAGE_URL = "https://cataas.com"
@@ -16,4 +16,5 @@ test("app shows ranom fact and image",async ({ page }) => {
   await expect(textContent?.length).toBeGreaterThan(0)
   await expect(imageSrc?.startsWith(CART_PREFIX_IMAGE_URL)).toBeTruthy()
 });
+
 
