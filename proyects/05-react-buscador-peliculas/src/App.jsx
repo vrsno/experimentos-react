@@ -11,8 +11,10 @@ function UseSearch (){
   useEffect(()=>{
     if(isFirstinput.current){
       isFirstinput.current = search === ''
-      return
+      return // este useref sirve para validar el search al principio pero se muestra despues
+      //ya que no se renderiza
     }
+
 
     if (search === ''){
       setError("no valido")
@@ -36,13 +38,14 @@ function UseSearch (){
 }
 
 function App() {
-const {movies: mappedMovies} = useMovies()
+
 const {search, updateSearch, error} = UseSearch()
+const {movies, loading, getMovies} = useMovies({search})
 
 
 const handleSubmit = (e)=>{
   e.preventDefault()
-  console.log({search})
+  getMovies()
 }
 
 const handleChange = (e)=>{
@@ -65,7 +68,9 @@ const handleChange = (e)=>{
       </header>
 
       <main>
-       <Movies movies={mappedMovies} />
+       {
+        loading ? <p>Cargando...</p>: <Movies movies={movies} />
+       }
       </main>
     </div>
 
