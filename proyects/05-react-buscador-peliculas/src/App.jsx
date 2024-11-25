@@ -1,7 +1,8 @@
 import './App.css'
 import { useMovies } from './hooks/useMovies'
 import { Movies } from "./components/Movies"
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import debounce from 'just-debounce-it'
 
 function UseSearch (){
   const  [ search, updateSearch ]= useState("")
@@ -38,20 +39,35 @@ function UseSearch (){
 }
 
 function App() {
+  const [sort, setSort] = useState(false)
 
 const {search, updateSearch, error} = UseSearch()
-const {movies, loading, getMovies} = useMovies({search})
+const {movies, loading, getMovies} = useMovies({search, sort})
 
+
+const debouncedgetMovies = useCallback(
+  debounce(search =>{
+  console.log(search)
+  getMovies({search})
+}, 300),[getMovies])
 
 const handleSubmit = (e)=>{
   e.preventDefault()
-  getMovies()
+  getMovies({search})
 }
 
+const handleSort = ()=>{
+  setSort(!sort)
+}
 const handleChange = (e)=>{
+
   const newQuery = e.target.value
   if(newQuery.startsWith(" ")) return
-  updateSearch(e.target.value)
+
+    // cada vez que detecta un cambio en el inpur hace la busqueda
+  const newSearch = e.target.value
+  updateSearch(newSearch)
+  debouncedgetMovies(newSearch)
 }
 
 
@@ -62,6 +78,7 @@ const handleChange = (e)=>{
         <h1>Buscador de peliculas</h1>
       <form className='form' onSubmit={handleSubmit}>
         <input onChange={handleChange} value={search} type="text" placeholder='Avengers, Star War, The Matrix...'/>
+        <input type="checkbox" onChange={handleSort} checked={sort} />
         <button type='submit'>Buscar</button>
       </form>
       { error && <p style={{color: "red"}} >{error}</p>}
