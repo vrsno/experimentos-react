@@ -1,6 +1,6 @@
 import './Products.css'
 import { AddToCartIcon } from './icons.jsx'
-
+import PropTypes from 'prop-types';
 
 export function Products ({ products }){
     console.log(products)
@@ -29,3 +29,15 @@ export function Products ({ products }){
     
 }
 
+Products.propTypes = {
+  products: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      price: PropTypes.number.isRequired,
+      rating: PropTypes.number.isRequired,
+      thumbnail: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};

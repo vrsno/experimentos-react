@@ -1,9 +1,10 @@
-import products from "./mocks/products.json"
+import productsData from "./mocks/products.json"
 import {Products} from "./componets/products"
 
 function App() {
+  const productsDatas = productsData.products
   return (
-      <Products products={products} />
+      <Products products={productsDatas} />
   )
 }
 

@@ -1,2 +1,7 @@
 package-lock.json
 node_modules/
+
+# Ignorar los archivos de configuración de ESLint
+.eslintrc.js
+.eslintrc.json
+.eslintignore
