@@ -1,19 +1,19 @@
-import PropTypes from "prop-types"
-import "./Footer.css"
 
-export function Footer( { filters }){
+import "./Footer.css"
+// import { useFilters } from "../hooks/useFilters"
+import { useCart } from "../hooks/useCart"
+
+export function Footer(){
+    //filtro para la busqueda prueba
+    // const { filters} = useFilters()
+    const {cart} = useCart()
     return (
         <footer className="footer">
-            {/* <h4>Prueba tecnica de React * -</h4>
-            <span>@miguelito</span>
-            <h5>Shooping Cart con useContent & reduceContent</h5> */}
+            
             {
-                JSON.stringify(filters, null, 2)
+            JSON.stringify(cart, null, 2)
             }
         </footer>
     )
 }
 
-Footer.propTypes = {
-    filters: PropTypes.func.isRequired,
-}

@@ -1,53 +1,30 @@
 import { Header } from "./componets/Header"
 import {products as initialProducts} from "./mocks/products.json"
-import {Products} from "./componets/products"
-import { useContext, useState} from "react"
+import {Products} from "./componets/Products"
 import { Footer } from "./componets/Footer"
-import { IS_DEVELOPMENT } from "./config"
+import { useFilters } from "./hooks/useFilters"
+// import { IS_DEVELOPMENT } from "./config"
+import { Cart } from "./componets/Cart"
+import { CartProvider } from "./context/cart.jsx"
 
 
-
-function useFilters (){
-  
-// const [filters, setFilters] = useState (
-//   {
-//     category: "all",
-//     minPrice: 0
-//   })
-
-const filters = useContext(FiltersContext)
-
-
-const filterProducts = (products) =>{
-  return products.filter(product =>{
-    return (
-      product.price > filters.minPrice &&
-      (
-        filters.category === "all" ||
-        product.category === filters.category
-      )
-    )
-  })
-}
-return {filters, filterProducts, setFilters}
-}
 
 function App() {
-  const [products] = useState(initialProducts)
+  
   // custom hooks
-  const { filters, filterProducts, setFilters} =  useFilters()
+  const { filterProducts} =  useFilters()
   //llamda
-  const filteredProducts = filterProducts(products)
+  const filteredProducts = filterProducts(initialProducts)
   
   
 
   return (
-      <>
-      <Header changeFilters={setFilters} />
+      <CartProvider>
+      <Header />
+      <Cart />
       <Products products={filteredProducts} />
-      {IS_DEVELOPMENT && <Footer filters={filters} />}
-
-      </>
+      <Footer />
+      </CartProvider>
   )
 }
 

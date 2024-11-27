@@ -1,22 +1,24 @@
-import { useId, useState } from "react"
+import { useId } from "react"
 import "./Filters.css"
-import PropTypes from "prop-types"
+import { useFilters } from "../hooks/useFilters"
 
-export function Filters({ onChange }){
-    const [minPrice, setPrice] = useState(0)
+
+export function Filters(){
+    const {filters, setFilters} = useFilters()
+    
     const minPriceFilteredId = useId()
     const categotyFilteredId = useId()
 
     const handleChangeMinPrice = (e)=>{
-        setPrice(e.target.value)
-        onChange(prevState =>({
+        
+        setFilters(prevState =>({
             ...prevState,
             minPrice: e.target.value
         }))
     }
 
     const handleChangeCategory = (e)=>{
-        onChange(prevState =>({
+        setFilters(prevState =>({
             ...prevState,
             category: e.target.value
         }))
@@ -31,8 +33,9 @@ export function Filters({ onChange }){
                 min="0"
                 max="1000"
                 onChange={handleChangeMinPrice}
+                value={filters.minPrice}
             />
-            <span>${minPrice}</span>
+            <span>${filters.minPrice}</span>
             </div>
             <div>
                 <label htmlFor={categotyFilteredId}>category:</label>
@@ -46,6 +49,4 @@ export function Filters({ onChange }){
     )
 }
 
-Filters.propTypes = {
-    onChange: PropTypes.func.isRequired,
-}
+
