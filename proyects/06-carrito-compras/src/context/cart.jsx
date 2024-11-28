@@ -1,48 +1,40 @@
-import { useState, createContext } from "react";
-import PropTypes from "prop-types";
+import { useReducer, createContext } from 'react'
+import { cartReducer, cartInitialState } from '../reducer/cart.js'
 
-//1. crear contexto
 export const CartContext = createContext()
 
-//2. crear provider
-export function CartProvider ({children}){
-    const [cart, setCart] = useState([])
+function useCartReducer () {
+  const [state, dispatch] = useReducer(cartReducer, cartInitialState)
 
-    const addtoCart = product =>{
-        const productInCartIndex = cart.finIndex(item => item.id === product.id)
-        if (productInCartIndex > 0){
-            //forma seria usando structuredClone
-            const newCart = structuredClone(cart)
-            newCart[productInCartIndex].quantity += 1
-             return setCart(newCart)
-        }
+  const addToCart = product => dispatch({
+    type: 'ADD_TO_CART',
+    payload: product
+  })
 
-        // producto no esta en el carrito
-        setCart(prevState =>(
-            [
-                ...prevState,
-                {
-                    ...product,
-                    quantity: 1
-                }
-            ])
-        )
-    }
-    const clearCart = ()=> {
-        setCart([])
-    }
+  const removeFromCart = product => dispatch({
+    type: 'REMOVE_FROM_CART',
+    payload: product
+  })
 
-    const removeFromCart = product =>{
-        setCart(prevState => prevState.filter(item => item.id !== product.id))
-    }
+  const clearCart = () => dispatch({ type: 'CLEAR_CART' })
 
-    return (
-        <CartContext.Provider value={{cart, addtoCart, removeFromCart, clearCart}}>
-            {children}
-        </CartContext.Provider>
-    )
+  return { state, addToCart, removeFromCart, clearCart }
 }
 
-CartProvider.propTypes = {
-    children: PropTypes.node.isRequired // 'children' debe ser un nodo React válido
-};
+// la dependencia de usar React Context
+// es MÍNIMA
+export function CartProvider ({ children }) {
+  const { state, addToCart, removeFromCart, clearCart } = useCartReducer()
+
+  return (
+    <CartContext.Provider value={{
+      cart: state,
+      addToCart,
+      removeFromCart,
+      clearCart
+    }}
+    >
+      {children}
+    </CartContext.Provider>
+  )
+}
