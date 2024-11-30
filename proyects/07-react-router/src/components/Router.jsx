@@ -1,14 +1,16 @@
-import { EVENTS } from "./consts"
+import { EVENTS } from "../consts.js"
 import { useState, useEffect } from "react"
 import PropTypes from "prop-types"
 import {match} from "path-to-regexp"
+import React from "react"
+import {getCurrentPath} from "../utils/getCurrentPath.js"
 
-export function Router ({routes = [], defaultcomponent: DefaultComponent = () =><h1>404</h1> }){
-    const [currentPath, setCurrentPath] = useState(window.location.pathname)
+export function Router ({children ,routes = [], defaultcomponent: DefaultComponent = () =><h1>404</h1> }){
+    const [currentPath, setCurrentPath] = useState(getCurrentPath)
   
     useEffect(()=>{
       const onLocationchange = () => {
-        setCurrentPath(window.location.pathname)
+        setCurrentPath(getCurrentPath())
       }
   
       window.addEventListener(EVENTS.PUSHSTATE, onLocationchange)
@@ -20,9 +22,23 @@ export function Router ({routes = [], defaultcomponent: DefaultComponent = () =>
       }
     }, [])
     let routeParams = {}
+
+    // add routes from children componet
+    const routesFromChildren = React.Children.map(children, (child) => {
+      if (child && child.type) {
+        const { name } = child.type;
+        const isRoute = name === 'Route';
+  
+        // Si es un componente de tipo 'Route', extraemos las props
+        return isRoute ? child.props : null;
+      }
+      return null; // Si no es un 'Route', devolvemos null
+    });
+    
+    const routesToUse = routes.concat(routesFromChildren).filter(Boolean)
     
   
-    const Page = routes.find(({path}) => {
+    const Page = routesToUse.find(({path}) => {
       if (path === currentPath) return true
 
       // usando path-to-regexp

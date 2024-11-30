@@ -1,20 +1,19 @@
 import './App.css'
-import HomePage from "./pages/Home"
-import AboutPage from "./pages/About.jsx"
+import { lazy, Suspense } from 'react'
+
+
 
 import { Router } from './Router'
 import Page404 from './pages/404.jsx'
 import SearchPage from './pages/Search.jsx'
+import { Route } from './route.jsx'
+
+
+// hasta que no lo necesita nop carga
+const LazyHomePage = lazy(()=> import(('./pages/Home.jsx')))
+const LazyAboutPage = lazy(() => import('./pages/About.jsx'))
 
 const appRoutes = [
-  {
-    path: "/",
-    component: HomePage
-  },
-  {
-    path: "/about",
-    component: AboutPage
-  },
   {
     // query es dinamica porque no sabemos cual es su valor
     path: "/search/:query",
@@ -27,7 +26,12 @@ function App() {
 
   return (
     <main>
-      <Router routes={appRoutes} defaultcomponent={Page404} />
+      <Suspense fallback={<div>Loading.....</div>}>
+      <Router routes={appRoutes} defaultcomponent={Page404}>
+        <Route path="/" component={LazyHomePage} />
+        <Route path="/about" component={LazyAboutPage} />
+      </Router>
+      </Suspense>
     </main>
   )
 
