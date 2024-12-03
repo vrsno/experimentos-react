@@ -2,7 +2,7 @@ import { type AUTO_LANGUAGE, type SUPPORTTED_LANGUAGES } from "./constants"
 
 export type Language  = keyof  typeof SUPPORTTED_LANGUAGES
 export type AutoLanguage = typeof AUTO_LANGUAGE
-export type FromLanguage = Language | AutoLanguage 
+export type FromLanguage = Language | AutoLanguage
 
 export interface State {
     fromLanguage: FromLanguage
@@ -18,3 +18,9 @@ export type Action =
   | { type: 'SET_TO_LANGUAGE', payload: Language }
   | { type: 'SET_FROM_TEXT', payload: string }
   | { type: 'SET_RESULT', payload: string }
+
+
+  export enum SectionType {
+    From = "from",
+    To = "to"
+  }
